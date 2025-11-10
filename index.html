@@ -13,7 +13,7 @@
             text-align: center;
             padding: 20px;
             margin: 0;
-            overflow: hidden; /* Om te voorkomen dat het rad buiten beeld rolt */
+            /* overflow: hidden; *//* Deactiveer: kan de scrollbalk hinderen op mobiel */
         }
 
         h1, h2 {
@@ -43,11 +43,11 @@
             flex-direction: column;
             align-items: center;
             margin: 30px 0;
-            position: relative; /* Belangrijk voor positionering van de pijl */
+            position: relative;
         }
 
         .wheel {
-            width: 350px; /* Groter wiel voor meer segmenten en leesbaarheid */
+            width: 350px; /* Standaard wielgrootte */
             height: 350px;
             border-radius: 50%;
             background-image: conic-gradient(
@@ -62,33 +62,45 @@
             );
             border: 10px solid #ff8a80;
             position: relative;
-            transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Soepele draaibeweging */
+            transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1);
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* Indicator for the selected name (Aangepast voor plaatsing in .wheel) */
+        .indicator {
+            position: absolute;
+            top: -30px; /* Plaats de pijl net boven de rand van het wiel */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent; /* Grotere pijl */
+            border-right: 20px solid transparent;
+            border-top: 30px solid #ff0000; /* Duidelijk rode pijl */
+            z-index: 20;
+            /* margin-top: -20px; *//* Niet nodig als top wordt gebruikt */
         }
 
         .wheel-segment {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 100px; /* Vaste breedte om tekst te centreren */
-            height: 25px; /* Vaste hoogte */
-            margin-top: -12.5px; /* De helft van de hoogte om verticaal te centreren */
-            margin-left: -50px; /* De helft van de breedte om horizontaal te centreren */
+            width: 100px;
+            height: 25px;
+            margin-top: -12.5px;
+            margin-left: -50px;
             text-align: center;
             font-size: 1.2em;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
-            transform-origin: 50% 100%; /* Draaipunt aan de onderkant van het segment */
+            transform-origin: 50% 100%;
         }
 
         /* Segment kleuren */
-        .segment-fran { color: #d84315; } /* Donkerder oranje/rood */
-        .segment-vince { color: #01579b; } /* Donkerder blauw */
+        .segment-fran { color: #d84315; }
+        .segment-vince { color: #01579b; }
 
-        /* Positioning for each segment */
-        /* Rotate the segment container and then translate it out from the center */
-        /* Each segment is 45deg. We rotate by (index * 45deg) + 22.5deg (to center in segment) */
-        /* Translate-y moves it from the center of the wheel outwards. Adjusted for new wheel size. */
+        /* Positioning for each segment - translateY (-140px is voor 350px wiel/2 - segment grootte) */
         #seg0 { transform: rotate(22.5deg) translateY(-140px); }
         #seg1 { transform: rotate(67.5deg) translateY(-140px); }
         #seg2 { transform: rotate(112.5deg) translateY(-140px); }
@@ -98,21 +110,6 @@
         #seg6 { transform: rotate(292.5deg) translateY(-140px); }
         #seg7 { transform: rotate(337.5deg) translateY(-140px); }
 
-        /* Indicator for the selected name */
-        .indicator {
-            position: absolute;
-            top: 0px; /* Positioneer bovenaan de wheel-container */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 20px solid transparent; /* Grotere pijl */
-            border-right: 20px solid transparent;
-            border-top: 30px solid #ff0000; /* Duidelijk rode pijl */
-            z-index: 20; /* Zorg dat deze boven het wiel staat */
-            margin-top: -20px; /* Trek de pijl iets omhoog zodat de punt op de rand wijst */
-        }
-
         /* Center circle for decoration */
         .center-circle {
             position: absolute;
@@ -121,14 +118,71 @@
             transform: translate(-50%, -50%);
             width: 80px;
             height: 80px;
-            background-color: #ff8a80; /* Roze in het midden */
+            background-color: #ff8a80;
             border-radius: 50%;
             border: 5px solid #ffffff;
             box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            z-index: 15; /* Tussen de segmenten en de pijl */
+            z-index: 15;
         }
 
+        /* --- BEGIN MOBIEL RESPONSIVITEIT (Media Query) --- */
+        @media (max-width: 500px) {
+            .container {
+                padding: 15px; /* Minder opvulling op kleine schermen */
+                border: 3px dashed #a7ffeb;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
 
+            .wheel {
+                width: 280px; /* Maak het wiel kleiner */
+                height: 280px;
+                border: 8px solid #ff8a80;
+            }
+
+            .wheel-segment {
+                width: 80px; /* Maak het segment kleiner */
+                font-size: 1em; /* Verklein de tekst */
+                margin-left: -40px;
+            }
+            
+            /* Pas de translateY aan om de segmenten te centreren in het kleinere wiel */
+            /* Nieuwe translateY is voor 280px wiel/2 - segment grootte: -117.5px */
+            #seg0 { transform: rotate(22.5deg) translateY(-117.5px); }
+            #seg1 { transform: rotate(67.5deg) translateY(-117.5px); }
+            #seg2 { transform: rotate(112.5deg) translateY(-117.5px); }
+            #seg3 { transform: rotate(157.5deg) translateY(-117.5px); }
+            #seg4 { transform: rotate(202.5deg) translateY(-117.5px); }
+            #seg5 { transform: rotate(247.5deg) translateY(-117.5px); }
+            #seg6 { transform: rotate(292.5deg) translateY(-117.5px); }
+            #seg7 { transform: rotate(337.5deg) translateY(-117.5px); }
+
+            .center-circle {
+                width: 60px; /* Maak de cirkel in het midden kleiner */
+                height: 60px;
+            }
+            
+            #spin-button {
+                padding: 10px 20px;
+                font-size: 1.2em;
+            }
+            
+            .result-box {
+                padding: 30px;
+            }
+
+            .result-box h2 {
+                font-size: 2em;
+            }
+
+            .result-box p {
+                font-size: 1.5em;
+            }
+        }
+        /* --- EINDE MOBIEL RESPONSIVITEIT --- */
+        
         /* Button CSS (ongewijzigd) */
         #spin-button {
             background-color: #ff8a80;
@@ -151,7 +205,7 @@
             box-shadow: 0 2px #d84315;
             transform: translateY(2px);
         }
-        
+            
         #spin-button:disabled {
             background-color: #cccccc;
             box-shadow: none;
@@ -165,15 +219,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Donkere, doorzichtige achtergrond */
-            display: none; /* Standaard verborgen */
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 100;
         }
 
         .result-box {
-            background-color: #a7ffeb; /* Zacht mintgroene achtergrond */
+            background-color: #a7ffeb;
             color: #333;
             padding: 50px;
             border-radius: 25px;
@@ -206,7 +260,8 @@
 
         <div class="wheel-container">
             <h2>Wie doet de luier?</h2>
-            <div class="indicator"></div> <div id="wheel" class="wheel">
+            <div id="wheel" class="wheel">
+                <div class="indicator"></div> 
                 <span id="seg0" class="wheel-segment segment-fran">FRAN</span>
                 <span id="seg1" class="wheel-segment segment-vince">VINCE</span>
                 <span id="seg2" class="wheel-segment segment-fran">FRAN</span>
@@ -215,7 +270,8 @@
                 <span id="seg5" class="wheel-segment segment-vince">VINCE</span>
                 <span id="seg6" class="wheel-segment segment-fran">FRAN</span>
                 <span id="seg7" class="wheel-segment segment-vince">VINCE</span>
-                <div class="center-circle"></div> </div>
+                <div class="center-circle"></div> 
+            </div>
             <button id="spin-button">Draaien maar!</button>
         </div>
     </div>
@@ -236,7 +292,6 @@
         const winnerText = document.getElementById('winner-text');
 
         // De 8 segmenten en hun winnende naam en rotatiebereik (relatief aan de pijl boven, 0 graden)
-        // Elk segment is 45 graden breed. Fran en Vince wisselen af.
         const segments = [
             { name: 'Fran', min: 0, max: 45, center: 22.5 },
             { name: 'Vince', min: 45, max: 90, center: 67.5 },
@@ -256,27 +311,21 @@
 
         // Functie om het rad te laten draaien
         function spinWheel() {
-            spinButton.disabled = true; // Knop uitschakelen tijdens het draaien
+            spinButton.disabled = true;
 
             const winningSegment = selectSegment();
             const winner = winningSegment.name;
             
             // Bepaal de doelhoek: willekeurige hoek binnen het segment
-            // We zorgen ervoor dat het in het midden van het segment valt (rond de 'center' waarde)
-            const randomOffset = (Math.random() * 30) - 15; // -15 tot +15 graden afwijking van het midden
+            const randomOffset = (Math.random() * 30) - 15;
             let targetAngle = winningSegment.center + randomOffset;
 
-            // Zorg ervoor dat de hoek positief blijft en binnen 0-360 valt
             targetAngle = (targetAngle + 360) % 360;
 
-            // Een willekeurig aantal volledige omwentelingen (bijv. 5 tot 10) voor een "draai-effect"
-            const fullSpins = Math.floor(Math.random() * 6) + 5; // 5 tot 10 volledige omwentelingen
+            // Een willekeurig aantal volledige omwentelingen (bijv. 5 tot 10)
+            const fullSpins = Math.floor(Math.random() * 6) + 5;
             
-            // De totale rotatie is (volledige omwentelingen * 360) + (doelhoek)
-            // Het wiel draait met de klok mee, dus de pijl wijst naar 0 graden.
-            // Als het winnende segment gecentreerd is op 22.5 graden, moet het wiel
-            // zoveel gedraaid worden dat 22.5 graden bovenaan komt te staan.
-            // Dit betekent dat de rotatie: (fullSpins * 360) - targetAngle
+            // De totale rotatie is (volledige omwentelingen * 360) - (doelhoek)
             let degree = (fullSpins * 360) - targetAngle; 
 
             wheel.style.transform = `rotate(${degree}deg)`;
@@ -284,20 +333,20 @@
             // Toon het resultaat na de draaitijd (5 seconden, zoals ingesteld in CSS)
             setTimeout(() => {
                 showResult(winner);
-            }, 5000); // 5000ms komt overeen met de CSS transition tijd
+            }, 5000);
         }
 
         // Functie om de winnaar weer te geven
         function showResult(winner) {
             resultTitle.textContent = "🥳 We hebben een winnaar! 🥳";
             winnerText.textContent = `${winner} mag de pamper doen!`;
-            resultOverlay.style.display = 'flex'; // Toon de kader
+            resultOverlay.style.display = 'flex';
         }
 
         // Functie om het rad te resetten
         function resetWheel() {
             // Reset de rotatie van het rad
-            wheel.style.transition = 'none'; // Schakel de transitie uit voor de reset
+            wheel.style.transition = 'none';
             wheel.style.transform = 'rotate(0deg)';
             
             // Verberg de kader
@@ -306,7 +355,7 @@
             // Schakel de knop weer in
             spinButton.disabled = false;
 
-            // Herstel de transitie na een korte vertraging, zodat de reset direct is
+            // Herstel de transitie na een korte vertraging
             setTimeout(() => {
                 wheel.style.transition = 'transform 5s cubic-bezier(0.25, 0.1, 0.25, 1)';
             }, 50);
